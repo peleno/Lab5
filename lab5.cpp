@@ -1,154 +1,164 @@
 #include <iostream>
 #include <math.h>
+#define SIZE 5
 using namespace std;
-#define n 5
-class row
+
+class Row
 {
     public:
     void InputRow();
     void OutputRow();
-    friend void SortInRowsDescending(row vector[]);
-    friend void fAndF(row vector[]);
+    friend void SortInRowsDescending(Row vector[]);
+    friend void ArithmeticMeansInColumns(Row vector[]);
     
     private:
-    int elementsOfRow[n];
+    int elementsOfRow[SIZE];
 };
 
-void merge (int array1[], int len1, int array2[], int len2, int array[]);
-void mergeSort(int array[], int len);
+void merge (int leftArray[], int leftLenght, int rightArray[], int rightLenght, int sourceArray[]);
+void mergeSort(int array[], int arrayLenght);
 
 int main()
 {
-    row array[n];
-    array[0].InputRow();
-    cout<<"Source matrix"<<endl;
-    array[0].OutputRow();
-    cout << endl;
+    Row array[SIZE];
+    for(int i = 0; i < SIZE; i++)
+    {
+        array[i].InputRow();
+    }
+    cout<<"\nSource matrix"<<endl;
+    for(int i = 0; i < SIZE; i++)
+    {
+        array[i].OutputRow();
+        cout << endl;
+    }
     SortInRowsDescending(array);
-    cout<<"Sorted matrix"<<endl;
-    array[0].OutputRow();
-    cout << endl;
-    fAndF(array);
+    cout<<"\nSorted matrix"<<endl;
+    for(int i = 0; i < SIZE; i++)
+    {
+        array[i].OutputRow();
+        cout << endl;
+    }
+    ArithmeticMeansInColumns(array);
 }
 
-void merge (int array1[], int len1, int array2[], int len2, int array[])
+void merge (int leftArray[], int leftLenght, int rightArray[], int rightLenght, int sourceArray[])
 {
     int i = 0, j = 0, k = 0;
 
-    while(i < len1 || j < len2)
+    while(i < leftLenght || j < rightLenght)
     {
-        if (i < len1 && j < len2)
+        if (i < leftLenght && j < rightLenght)
         {
-            if (array1[i] > array2[j])
+            if (leftArray[i] > rightArray[j])
             {
-                array[k] = array1[i];
+                sourceArray[k] = leftArray[i];
                 i++;
                 k++;
             }
             else
             {
-                array[k] = array2[j];
+                sourceArray[k] = rightArray[j];
                 j++;
                 k++;
             }
         }
-        else if (i >= len1)
+        else if (i >= leftLenght)
         {
-            array[k] = array2[j];
+            sourceArray[k] = rightArray[j];
             j++;
             k++;
         }
-        else if (j >= len2)
+        else if (j >= rightLenght)
         {
-            array[k] = array1[i];
+            sourceArray[k] = leftArray[i];
             i++;
             k++;
         }
     }
 }
 
-void mergeSort(int array[], int len)
+void mergeSort(int array[], int arrayLenght)
 {
-    int len1, len2;
-    if (len%2 == 0)
+    int leftLenght, rightLenght;
+    if (arrayLenght%2 == 0)
     {
-        len1 = len/2;
-        len2 = len/2;
+        leftLenght = arrayLenght/2;
+        rightLenght = arrayLenght/2;
     }
     else
     {
-        len1 = len/2;
-        len2 = len/2 + 1;
+        leftLenght = arrayLenght/2;
+        rightLenght = arrayLenght/2 + 1;
     }
 
-    int array1[len1];
-    int array2[len2];
-    for (int i = 0; i < len1; i++)
+    int leftArray[leftLenght];
+    int rightArray[rightLenght];
+    for (int i = 0; i < leftLenght; i++)
     {
-        array1[i] = array[i];
+        leftArray[i] = array[i];
     }
-    for (int j = 0; j < len2; j ++)
+    for (int j = 0; j < rightLenght; j ++)
     {
-        array2[j] = array[len1 + j];
+        rightArray[j] = array[leftLenght + j];
     }
 
-    if (len == 2)
+    if (arrayLenght == 2)
     {
-        merge (array1, len1, array2, len2, array);
+        merge (leftArray, leftLenght, rightArray, rightLenght, array);
     }
-    else if (len == 3)
+    else if (arrayLenght == 3)
     {
-        mergeSort(array2, len2);
-        merge (array1, len1, array2, len2, array);
+        mergeSort(rightArray, rightLenght);
+        merge (leftArray, leftLenght, rightArray, rightLenght, array);
     }
     else
     {
-        mergeSort(array1, len1);
-        mergeSort(array2, len2);
-        merge (array1, len1, array2, len2, array);
+        mergeSort(leftArray, leftLenght);
+        mergeSort(rightArray, rightLenght);
+        merge (leftArray, leftLenght, rightArray, rightLenght, array);
     }
 }
 
-void row::InputRow()
+void Row::InputRow()
 {
-    for(int i = 0; i < n; i++)
+    for(int i = 0; i < SIZE; i++)
     {
-        cin>>this->elementsOfRow[i];
+        cin >> this->elementsOfRow[i];
     }
 }
 
-void row::OutputRow()
+void Row::OutputRow()
 {
-    for(int i = 0; i < n; i++)
+    for(int i = 0; i < SIZE; i++)
     {
         cout << this->elementsOfRow[i]<<"\t";
     }
     cout << endl;
 }
 
-void SortInRowsDescending(row vector[])
+void SortInRowsDescending(Row vector[])
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < SIZE; i++)
     {
-        mergeSort(vector[i].elementsOfRow, n);    
+        mergeSort(vector[i].elementsOfRow, SIZE);    
     }
 }
 
-void fAndF(row vector[])
+void ArithmeticMeansInColumns(Row vector[])
 {
     double arithmeticMean = 0;
-    int sum = 0;
-    double product = 1;
-    for (int i = 0; i < n; i++)
+    int sumOfElementsInColumn = 0;
+    double productOfArithmeticMeans = 1;
+    for (int i = 0; i < SIZE; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < SIZE; j++)
         {
-            sum += vector[j].elementsOfRow[i];
+            sumOfElementsInColumn += vector[j].elementsOfRow[i];
         }
-        arithmeticMean = sum / n;
-        cout << "in column" << i + 1 << ":" << arithmeticMean << endl;
-        product *= arithmeticMean;
+        arithmeticMean = sumOfElementsInColumn / SIZE;
+        cout << "Arimethic mean in column" << i + 1 << " = " << arithmeticMean << endl;
+        productOfArithmeticMeans *= arithmeticMean;
     }
-    double geom = pow(product, 0.2);
-    cout << "geom = " << geom << endl;
+    double geometricMean = pow(productOfArithmeticMeans, 1.0/SIZE);
+    cout << "Geomtric mean = " << geometricMean << endl;
 }
